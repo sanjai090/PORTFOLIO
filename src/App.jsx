@@ -1,12 +1,12 @@
-import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-import About from "./components/About";
-import Skills from "./components/Skills";
-import Education from "./components/Education";
-import Projects from "./components/Projects";
-import Certificates from "./components/Certificates";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
+import Navbar from "./components/navbar";
+import Home from "./components/home";
+import About from "./components/about";
+import Skills from "./components/skills";
+import Education from "./components/education";
+import Projects from "./components/projects";
+import Certificates from "./components/certificates";
+import Contact from "./components/contact";
+import Footer from "./components/footer";
 
 
 function App() {
