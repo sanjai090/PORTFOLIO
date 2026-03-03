@@ -4,9 +4,9 @@ import About from "./components/about";
 import Skills from "./components/skills";
 import Education from "./components/education";
 import Projects from "./components/projects";
-import Certificates from "./components/certificates";
+import Certificates from "./components/Certificates";
 import Contact from "./components/contact";
-import Footer from "./components/footer";
+import Footer from "./components/Footer";
 
 
 function App() {
