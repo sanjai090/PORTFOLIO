@@ -5,7 +5,7 @@ import cloud from "../assets/cloud.jpg";
 import deloit from "../assets/deloit.jpg";
 import ethk from "../assets/ethk.jpg";
 import git from "../assets/git.jpg";
-import integratingAI from "../assets/integratingAI.jpg";
+import integratingAI from "../assets/IntegratingAI.jpg";
 import react from "../assets/react.jpg";
 import reactpro from "../assets/reactpro.jpg";
 import internship from "../assets/internship.jpeg";
