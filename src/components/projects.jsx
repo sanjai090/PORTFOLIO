@@ -6,6 +6,30 @@ function Projects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const staticProjects = [
+    {
+      id: 'academic-analyzer',
+      title: 'ACADEMIC ANALYZER',
+      description: 'A comprehensive academic dashboard for students and educators to analyze performance metrics.',
+      live_url: 'https://svheccgpa.onrender.com/',
+      github_url: 'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
+    },
+    {
+      id: 'portfolio',
+      title: 'Personal Portfolio',
+      description: 'A modern, responsive personal portfolio website built to showcase my skills, projects, and contact information.',
+      live_url: 'https://sanjaispf.netlify.app/',
+      github_url: 'https://github.com/sanjai090/PORTFOLIO'
+    },
+    {
+      id: 'cgpa-calculator',
+      title: 'CGPA Calculator',
+      description: 'A web-based tool designed for students to easily calculate and track their Cumulative Grade Point Average (CGPA).',
+      live_url: 'https://sanjai090.github.io/CGPA/',
+      github_url: 'https://github.com/sanjai090/CGPA'
+    }
+  ];
+
   useEffect(() => {
     // Fetch projects from the new Node.js backend
     const controller = new AbortController();
@@ -20,26 +44,13 @@ function Projects() {
         return res.json();
       })
       .then((data) => {
-        const newProject = {
-          id: 'academic-analyzer',
-          title: 'ACADEMIC ANALYZER',
-          description: 'A comprehensive academic dashboard for students and educators to analyze performance metrics.',
-          live_url: 'https://svheccgpa.onrender.com/',
-          github_url: 'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
-        };
-        setProjects([...data, newProject]);
+        // If backend data exists, use it. Otherwise, fallback to static projects
+        setProjects(data && data.length > 0 ? data : staticProjects);
         setLoading(false);
       })
       .catch((err) => {
         console.error("Error:", err);
-        const newProject = {
-          id: 'academic-analyzer',
-          title: 'ACADEMIC ANALYZER',
-          description: 'A comprehensive academic dashboard for students and educators to analyze performance metrics.',
-          live_url: 'https://svheccgpa.onrender.com/',
-          github_url: 'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
-        };
-        setProjects([newProject]);
+        setProjects(staticProjects);
         // Silently fail and show static projects instead of showing a red error
         setLoading(false);
       });
