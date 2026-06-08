@@ -1,49 +1,24 @@
-import { useState, useEffect } from "react";
 import Tilt from "react-parallax-tilt";
 
+const projectList = [
+  {
+    id: 'academic-analyzer',
+    title: 'ACADEMIC ANALYZER',
+    description: 'A comprehensive academic dashboard for students and educators to analyze performance metrics, grades, and academic trends.',
+    live_url: 'https://svheccgpa.onrender.com/',
+    github_url: 'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
+  },
+  {
+    id: 'portfolio',
+    title: 'PORTFOLIO WEBSITE',
+    description: 'A modern, responsive personal portfolio built with React and Vite, featuring animated sections, certificate gallery, and contact form.',
+    live_url: 'https://sanjaispf.netlify.app/',
+    github_url: 'https://github.com/sanjai090/PORTFOLIO'
+  }
+];
+
 function Projects() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    // Fetch projects from the new Node.js backend
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000);
-
-    fetch("http://localhost:5000/api/projects", { signal: controller.signal })
-      .then((res) => {
-        clearTimeout(timeoutId);
-        if (!res.ok) {
-          throw new Error("Failed to fetch projects");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        const newProject = {
-          id: 'academic-analyzer',
-          title: 'ACADEMIC ANALYZER',
-          description: 'A comprehensive academic dashboard for students and educators to analyze performance metrics.',
-          live_url: 'https://svheccgpa.onrender.com/',
-          github_url: 'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
-        };
-        setProjects([...data, newProject]);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-        const newProject = {
-          id: 'academic-analyzer',
-          title: 'ACADEMIC ANALYZER',
-          description: 'A comprehensive academic dashboard for students and educators to analyze performance metrics.',
-          live_url: 'https://svheccgpa.onrender.com/',
-          github_url: 'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
-        };
-        setProjects([newProject]);
-        setError("Failed to load some projects. Is the backend running?");
-        setLoading(false);
-      });
-  }, []);
+  const projects = projectList;
 
   return (
     <section id="projects">
@@ -52,9 +27,6 @@ function Projects() {
           <h2 className="display-5 fw-bold">My Projects</h2>
           <div className="mx-auto" style={{ width: "60px", height: "4px", background: "var(--primary)" }}></div>
         </div>
-
-        {loading && <p className="text-center">Loading projects...</p>}
-        {error && <p className="text-center text-danger">{error}</p>}
 
         <div className="row g-4 justify-content-center">
           {projects.map((project, index) => (
