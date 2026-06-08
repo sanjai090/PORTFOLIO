@@ -40,7 +40,7 @@ function Projects() {
           github_url: 'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
         };
         setProjects([newProject]);
-        setError("Failed to load some projects. Is the backend running?");
+        // Silently fail and show static projects instead of showing a red error
         setLoading(false);
       });
   }, []);
