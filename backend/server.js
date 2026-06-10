@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql2');
+const mongoose = require('mongoose');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -12,32 +12,36 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-});
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('Connected to MongoDB.'))
+  .catch((err) => console.error('Error connecting to MongoDB:', err));
 
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL database:', err);
-    return;
-  }
-  console.log('Connected to MySQL database.');
+// Mongoose Schemas & Models
+const projectSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  live_url: String,
+  github_url: String
 });
+const Project = mongoose.model('Project', projectSchema);
+
+const messageSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  message: String,
+  createdAt: { type: Date, default: Date.now }
+});
+const Message = mongoose.model('Message', messageSchema);
 
 // API Routes
-app.get('/api/projects', (req, res) => {
-  const query = 'SELECT * FROM projects';
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Error fetching projects:', err);
-      res.status(500).json({ error: 'Failed to fetch projects' });
-      return;
-    }
-    res.json(results);
-  });
+app.get('/api/projects', async (req, res) => {
+  try {
+    const projects = await Project.find();
+    res.json(projects);
+  } catch (err) {
+    console.error('Error fetching projects:', err);
+    res.status(500).json({ error: 'Failed to fetch projects' });
+  }
 });
 
 // Email Transporter Setup
@@ -49,19 +53,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-app.post('/api/messages', (req, res) => {
+app.post('/api/messages', async (req, res) => {
   const { name, email, message } = req.body;
   
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'Please provide name, email, and message' });
   }
 
-  const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)';
-  db.query(query, [name, email, message], (err, results) => {
-    if (err) {
-      console.error('Error saving message:', err);
-      return res.status(500).json({ error: 'Failed to save message' });
-    }
+  try {
+    const newMessage = new Message({ name, email, message });
+    await newMessage.save();
 
     // Send Email Notification
     const mailOptions = {
@@ -80,7 +81,10 @@ app.post('/api/messages', (req, res) => {
       console.log('Email sent:', info.response);
       res.status(201).json({ success: true, message: 'Message sent successfully!' });
     });
-  });
+  } catch (err) {
+    console.error('Error saving message:', err);
+    return res.status(500).json({ error: 'Failed to save message' });
+  }
 });
 
 app.listen(port, () => {

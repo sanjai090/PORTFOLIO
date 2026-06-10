@@ -1,34 +1,53 @@
-const mysql = require('mysql2');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+// Mongoose Schema & Model
+const projectSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  live_url: String,
+  github_url: String
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL database:', err);
-    return;
-  }
-  console.log('Connected to MySQL database.');
-  
-  const query = 'INSERT INTO projects (title, description, live_url, github_url) VALUES (?, ?, ?, ?)';
-  const values = [
-    'ACADEMIC ANALYZER',
-    'A comprehensive dashboard for academic analysis.',
-    'https://svheccgpa.onrender.com/',
-    'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
-  ];
+const Project = mongoose.model('Project', projectSchema);
 
-  db.query(query, values, (err, results) => {
-    if (err) {
-      console.error('Error inserting project:', err);
-    } else {
-      console.log('Successfully inserted project!', results);
+mongoose.connect(process.env.MONGO_URI)
+  .then(async () => {
+    console.log('Connected to MongoDB.');
+
+    const projects = [
+      {
+        title: 'ACADEMIC ANALYZER',
+        description: 'A comprehensive dashboard for academic analysis.',
+        live_url: 'https://svheccgpa.onrender.com/',
+        github_url: 'https://github.com/sanjai090/ACADEMIC-DASHBOARD'
+      },
+      {
+        title: 'CGPA CALCULATOR',
+        description: 'Calculate your GPA and CGPA easily, accurately, and instantly.',
+        live_url: 'https://sanjai090.github.io/CGPA/',
+        github_url: 'https://github.com/sanjai090/CGPA'
+      },
+      {
+        title: 'PORTFOLIO',
+        description: 'Personal portfolio showcasing my projects, skills, and achievements.',
+        live_url: '',
+        github_url: 'https://github.com/sanjai090/PORTFOLIO'
+      }
+    ];
+
+    try {
+      // Optional: Clear existing projects before inserting
+      await Project.deleteMany({});
+      
+      const results = await Project.insertMany(projects);
+      console.log('Successfully inserted projects!', results);
+    } catch (err) {
+      console.error('Error inserting projects:', err);
+    } finally {
+      mongoose.connection.close();
     }
-    db.end();
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
   });
-});
