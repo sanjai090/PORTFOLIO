@@ -35,7 +35,7 @@ function Projects() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 3000);
 
-    fetch("http://localhost:5000/api/projects", { signal: controller.signal })
+    fetch("https://sanjaispf.onrender.com/api/projects", { signal: controller.signal })
       .then((res) => {
         clearTimeout(timeoutId);
         if (!res.ok) {

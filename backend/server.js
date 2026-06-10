@@ -34,6 +34,10 @@ const messageSchema = new mongoose.Schema({
 const Message = mongoose.model('Message', messageSchema);
 
 // API Routes
+app.get('/', (req, res) => {
+  res.send('Portfolio Backend is running perfectly!');
+});
+
 app.get('/api/projects', async (req, res) => {
   try {
     const projects = await Project.find();
